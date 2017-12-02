@@ -107,10 +107,24 @@ table_rpls %>%
   ggplot() + 
   geom_col(mapping = aes(x = DPEENERGIE_red,y = n)) + 
   theme_fivethirtyeight() + 
-  labs(title = "Diagnostique énergétique") + 
+  labs(title = "Consommation énergétique", 
+       subtitle = "diagnostic de performance énergétique") + 
   scale_y_continuous(labels = french_formatting)
 dev.off()
 
+
+png(filename = "dpeserre.png", width = 400, height = 320)
+table_rpls %>% 
+  filter(is.na(DPESERRE_red) == FALSE) %>%
+  count(DPESERRE_red) %>%
+  ggplot() + 
+  geom_col(mapping = aes(x = DPESERRE_red,y = n)) + 
+  theme_fivethirtyeight() + 
+  labs(title = "Émission de gaz à effet de serre", 
+       subtitle = "diagnostic de performance énergétique"
+       ) + 
+  scale_y_continuous(labels = french_formatting)
+dev.off()
 
 
 
