@@ -3,7 +3,7 @@ library("readr")
 library("dplyr")
 library("ggplot2")
 library("ggthemes")
-
+library('tricky')
 ## Aperçu 
 
 table_75 <- read_csv2(
@@ -82,6 +82,7 @@ table_rpls %>%
        par surface habitable")
 dev.off()
 
+
 ## Département
 
 png(filename = "departement.png", width = 400, height = 320)
@@ -99,13 +100,19 @@ table_rpls %>%
   scale_y_continuous(labels = function(x) {format(x, scientific = FALSE, big.mark = " ")})
 dev.off()
 
+table_rpls %>% 
+  filter(is.na(DPEENERGIE_red) == FALSE) %>%
+  count(DPEENERGIE_red) %>%
+  mutate(share = 100 * n / sum(n))
+
 
 png(filename = "dpeenergie.png", width = 400, height = 320)
 table_rpls %>% 
   filter(is.na(DPEENERGIE_red) == FALSE) %>%
   count(DPEENERGIE_red) %>%
+  mutate(share = 100 * n / sum(n)) %>%
   ggplot() + 
-  geom_col(mapping = aes(x = DPEENERGIE_red,y = n)) + 
+  geom_col(mapping = aes(x = DPEENERGIE_red,y = share)) + 
   theme_fivethirtyeight() + 
   labs(title = "Consommation énergétique", 
        subtitle = "diagnostic de performance énergétique") + 
@@ -117,8 +124,9 @@ png(filename = "dpeserre.png", width = 400, height = 320)
 table_rpls %>% 
   filter(is.na(DPESERRE_red) == FALSE) %>%
   count(DPESERRE_red) %>%
+  mutate(share = 100 * n / sum(n)) %>%
   ggplot() + 
-  geom_col(mapping = aes(x = DPESERRE_red,y = n)) + 
+  geom_col(mapping = aes(x = DPESERRE_red,y = share)) + 
   theme_fivethirtyeight() + 
   labs(title = "Émission de gaz à effet de serre", 
        subtitle = "diagnostic de performance énergétique"
